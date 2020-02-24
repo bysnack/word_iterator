@@ -9,5 +9,6 @@ int main() {
     std::cout << *wi << '\n';
     ++wi;
     std::cout << *wi << '\n';
+    std::cout << wi.first() << "-" << wi.last() << "\n";
     return 0;
 }

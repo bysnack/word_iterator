@@ -6,8 +6,6 @@ class word_iterator {
 public:
     using difference_type = std::string_view::difference_type;
     using value_type = std::string_view;
-    using pointer = std::string_view*;
-    using reference = std::string_view&;
     using iterator_category = std::bidirectional_iterator_tag;
 
     word_iterator() = default;
@@ -17,7 +15,7 @@ public:
     {
     }
 
-    word_iterator& operator--() {
+    word_iterator& operator--() noexcept {
         auto reverse = std::make_reverse_iterator(_it - 1);
         _it = std::find_if(reverse, std::rend(_data), isspace).base();
         
@@ -25,27 +23,27 @@ public:
     }
 
 
-    word_iterator operator--(int) {
+    word_iterator operator--(int) noexcept {
         auto copy = *this;
         this->operator--();
 
         return copy;
     }
 
-    word_iterator& operator++() {
+    word_iterator& operator++() noexcept {
         _it = std::find_if(_it, std::end(_data), isspace) + 1;
         
         return *this;
     }
 
-    word_iterator operator++(int) {
+    word_iterator operator++(int) noexcept {
         auto copy = *this;
         this->operator++();
 
         return copy;
     }
 
-    value_type operator*() noexcept {
+    value_type operator*() const noexcept {
         auto it = std::find_if(_it, std::end(_data), isspace);
         if (it == std::end(_data)) {
             return {};
