@@ -92,11 +92,11 @@ public:
     }
 
     bool operator==(word_iterator other) const noexcept {
-        return *(*this) == *other;
+        return _it == other._it;
     }
 
     bool operator!=(word_iterator other) const noexcept {
-        return *(*this) == *other;
+        return !(*this == other);
     }
 
 private:

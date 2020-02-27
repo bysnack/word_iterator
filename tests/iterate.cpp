@@ -14,5 +14,10 @@ TEST_CASE("Bidirectional iterator"){
     REQUIRE( *i == "this" );
     word_iterator j{ sentence };
     REQUIRE( i == j );
+    REQUIRE( *i == *j);
+    REQUIRE( ++i != j);
+    word_iterator k{ "is this a test?" };
+    REQUIRE(i != k);
+    REQUIRE(*i == *k);
 };
 
