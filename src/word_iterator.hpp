@@ -24,7 +24,8 @@ public:
      */
     word_iterator(std::string_view data) noexcept :
         _data{ data },
-        _it{ std::begin(_data) }
+        _it{ std::begin(_data) },
+        _length{ static_cast<std::string_view::size_type>(std::distance(_it, std::find_if(_it, std::end(_data), isspace))) }
     {
     }
 
@@ -35,7 +36,9 @@ public:
      */
     word_iterator& operator--() noexcept {
         auto reverse = std::make_reverse_iterator(_it - 1);
-        _it = std::find_if(reverse, std::rend(_data), isspace).base();
+        auto it = std::find_if(reverse, std::rend(_data), isspace);
+        _length = std::distance(reverse, it);
+        _it = it.base();
         
         return *this;
     }
@@ -47,10 +50,10 @@ public:
      *  @return         A new iterator pointing to the current word
      */
     word_iterator operator--(int) noexcept {
-        auto copy = *this;
-        this->operator--();
+        auto retval = *this;
+        --(*this);
 
-        return copy;
+        return retval;
     }
 
     /**
@@ -60,7 +63,8 @@ public:
      */
     word_iterator& operator++() noexcept {
         _it = std::find_if(_it, std::end(_data), isspace) + 1;
-        
+        _length = std::distance(_it, std::find_if(_it, std::end(_data), isspace));
+
         return *this;
     }
 
@@ -70,28 +74,33 @@ public:
      *  @return         A new iterator pointing to the current word
      */
     word_iterator operator++(int) noexcept {
-        auto copy = *this;
-        this->operator++();
+        auto retval = *this;
+        ++(*this);
 
-        return copy;
+        return retval;
     }
 
     /**
      *  Derefence operator, retrieves the current pointed word
      * 
-     *  @return         A new view of the pointer word
+     *  @return         A new view of the pointed word
      */
     value_type operator*() const noexcept {
-        auto it = std::find_if(_it, std::end(_data), isspace);
-        if (it == std::end(_data)) {
-            return {};
-        }
-        std::string_view::size_type dist = std::distance(_it, it);
-        
-        return {_it, dist};
+        if (_it == std::end(_data)) return {};
+
+        return {_it, _length};
+    }
+
+    bool operator==(word_iterator other) const noexcept {
+        return *(*this) == *other;
+    }
+
+    bool operator!=(word_iterator other) const noexcept {
+        return *(*this) == *other;
     }
 
 private:
     std::string_view _data;
     std::string_view::iterator _it;
+    std::string_view::size_type _length;
 };
