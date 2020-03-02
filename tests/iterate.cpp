@@ -14,11 +14,12 @@ TEST_CASE("Bidirectional iterator"){
     REQUIRE( *i == "this" );
     word_iterator j{ x };
     REQUIRE( i == j );
-    REQUIRE( *i == *j);
-    REQUIRE( ++i != j);
+    REQUIRE( *i == *j );
+    REQUIRE( ++i != j );
+    REQUIRE( *i != *j );
     const std::string y{ "this is a test" };
     j = { y };
-    REQUIRE(i != ++j);
-    REQUIRE(*i == *j);
+    REQUIRE( i != ++j );
+    REQUIRE( *i == *j );
 };
 
